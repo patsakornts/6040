@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไทย 60/40</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f0;
+    --muted: #666;
+    --accent-gov: #4ade80;
+    --accent-self: #60a5fa;
+    --accent-gov-dim: rgba(74,222,128,0.08);
+    --accent-self-dim: rgba(96,165,250,0.08);
+  }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .input-section {
+    margin-bottom: 40px;
+  }
+
+  .input-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: block;
+    letter-spacing: 0.3px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .input-row:focus-within {
+    border-color: rgba(255,255,255,0.25);
+  }
+
+  .unit {
+    padding: 0 16px;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+    height: 58px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  input[type="number"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    padding: 0 18px;
+    height: 58px;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .clear-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0 16px;
+    height: 58px;
+    border-left: 1px solid var(--border);
+    transition: color .15s;
+    flex-shrink: 0;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .clear-btn:hover { color: var(--text); }
+
+  .results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .result-card {
+    border-radius: 14px;
+    padding: 22px 20px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card.gov {
+    background: var(--accent-gov-dim);
+    border-color: rgba(74,222,128,0.15);
+  }
+  .result-card.self {
+    background: var(--accent-self-dim);
+    border-color: rgba(96,165,250,0.15);
+  }
+
+  .card-pct {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .gov .card-pct  { color: var(--accent-gov); }
+  .self .card-pct { color: var(--accent-self); }
+
+  .card-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .card-amount {
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .gov  .card-amount { color: var(--accent-gov); }
+  .self .card-amount { color: var(--accent-self); }
+
+  .card-unit {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  .dash {
+    color: rgba(255,255,255,0.12);
+    font-size: 22px;
+    font-weight: 300;
+  }
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">ไทย 60 / 40</p>
+
+  <div class="input-section">
+    <label class="input-label" for="price">ราคาสินค้าที่ต้องจ่าย</label>
+    <div class="input-row">
+      <span class="unit">฿</span>
+      <input type="number" id="price" placeholder="0.00" min="0" step="any" oninput="calc()" autocomplete="off">
+      <button class="clear-btn" onclick="clearAll()">ล้าง</button>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="result-card gov">
+      <div class="card-pct">60%</div>
+      <div class="card-label">รัฐออกให้</div>
+      <div class="card-amount" id="gov-amt"><span class="dash">—</span></div>
+      <div class="card-unit" id="gov-unit"></div>
+    </div>
+    <div class="result-card self">
+      <div class="card-pct">40%</div>
+      <div class="card-label">จ่ายเอง</div>
+      <div class="card-amount" id="self-amt"><span class="dash">—</span></div>
+      <div class="card-unit" id="self-unit"></div>
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+  function fmt(n) {
+    return n.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+  function calc() {
+    const v = parseFloat(document.getElementById('price').value);
+    const govEl  = document.getElementById('gov-amt');
+    const selfEl = document.getElementById('self-amt');
+    const govU   = document.getElementById('gov-unit');
+    const selfU  = document.getElementById('self-unit');
+
+    if (isNaN(v) || v <= 0) {
+      govEl.innerHTML  = '<span class="dash">—</span>';
+      selfEl.innerHTML = '<span class="dash">—</span>';
+      govU.textContent = selfU.textContent = '';
+
+      return;
+    }
+    govEl.textContent  = fmt(v * 0.6);
+    selfEl.textContent = fmt(v * 0.4);
+    govU.textContent   = selfU.textContent = 'บาท';
+
+  }
+  function clearAll() {
+    document.getElementById('price').value = '';
+    calc();
+  }
+</script>
+</body>
+</html>
